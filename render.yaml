@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: musicverse-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: musicverse
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://musicverse-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
