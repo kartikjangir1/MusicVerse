@@ -17,16 +17,25 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // =========================
   // SAVE ACTIVE SESSION
   // =========================
 
   useEffect(() => {
-    if (!localStorage.getItem("musicverseToken")) return;
+    if (!localStorage.getItem("musicverseToken")) {
+      setIsAuthLoading(false);
+      return;
+    }
+
     getCurrentUser()
       .then(({ user: currentUser }) => setUser(currentUser))
-      .catch(() => localStorage.removeItem("musicverseToken"));
+      .catch(() => {
+        localStorage.removeItem("musicverseToken");
+        setUser(null);
+      })
+      .finally(() => setIsAuthLoading(false));
   }, []);
 
   // =========================
@@ -145,6 +154,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        isAuthLoading,
         login,
         register,
         logout,
