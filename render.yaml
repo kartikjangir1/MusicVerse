@@ -17,7 +17,7 @@ services:
         value: production
 
   - type: web
-    name: musicverse
+    name: musicverse-frontend-kartik
     runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
